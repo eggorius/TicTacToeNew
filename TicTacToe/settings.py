@@ -66,7 +66,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'TicTacToe.wsgi.application'
 
-ASGI_APPLICATION = 'TicTacToe.routing.application'
+ASGI_APPLICATION = 'TicTacToe.asgi.application'
 
 CHANNEL_LAYERS = {
     "default": {

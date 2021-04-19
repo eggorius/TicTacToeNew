@@ -132,8 +132,8 @@ gameSocket.onmessage = ev => {
             'You will be redirected to the main page :)',
             'error'
           )
+           window.location.replace('{% url 'home' %}');
         }
-        window.location.replace('{% url 'home' %}');
       })
     }
     } else if (data['message'] === 'game_is_over') {
@@ -165,7 +165,6 @@ gameSocket.onmessage = ev => {
           window.location.replace('{% url 'home' %}');
         }
       })
-
   }
 
   const cell = document.getElementById(id)

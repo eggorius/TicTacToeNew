@@ -9,7 +9,7 @@ class CreateGameForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'aria-describedby': 'basic-addon1'
+                'aria-describedby': 'basic-addon1',
             })
         }
 
