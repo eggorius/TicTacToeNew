@@ -66,27 +66,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'TicTacToe.wsgi.application'
 
-ASGI_APPLICATION = 'TicTacToe.asgi.application'
+ASGI_APPLICATION = 'TicTacToe.routing.application'
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            # "hosts": [('127.0.0.1', 6379)],
-            "hosts": [os.environ.get("REDIS_URL", "redis://localhost:6379")]
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         },
     },
-}
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient'
-        }
-    }
-
 }
 
 
