@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_tagify',
     'django.contrib.admin',
-    'django.contrib.auth',
+    # 'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
