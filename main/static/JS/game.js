@@ -13,7 +13,7 @@ const checkForWinner = (player) => {
 
 
 const gameSocket = new WebSocket(
-  'ws://'
+  'wss://'
   + window.location.host
   + '/ws/game/'
   + gameName
