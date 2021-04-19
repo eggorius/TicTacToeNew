@@ -24,7 +24,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    #'django.contrib.auth',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -78,7 +78,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-CASHES = {
+CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
