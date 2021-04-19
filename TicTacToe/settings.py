@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 import django_heroku
+import django
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,17 +23,16 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'main',
     'channels',
+    'bootstrap4',
+    'django_tagify',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap4',
-    'rest_framework',
-    'django_tagify',
+    'main',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 django_heroku.settings(locals())
+django.setup()
