@@ -1,0 +1,131 @@
+body {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+}
+
+div {
+    display: block;
+}
+
+.game {
+    color: black;
+    font-family: sans-serif;
+    box-sizing: inherit;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    width: 300px;
+    height: 300px;
+    margin-left: -150px;
+    margin-top: -205px;
+}
+
+.board {
+    color: black;
+    font-family: sans-serif;
+    text-size-adjust: 100%;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: inherit;
+    width: 100%;
+    height: 100%;
+}
+
+.square {
+    float: left;
+    width: 33.333333333%;
+    height: 33.333333333%;
+    border-width: 5px;
+    border-color: black;
+    -webkit-transition: background-color .1s;
+    -moz-transition: background-color .1s;
+    transition: background-color .1s;
+    will-change: background-color,border-color;
+    cursor: pointer;
+}
+
+.square.left {
+    clear: both;
+    border-right-style: solid;
+}
+
+.square.top {
+    border-bottom-style: solid;
+}
+
+.square.right {
+    border-left-style: solid;
+}
+
+.square.bottom {
+    border-top-style: solid;
+}
+
+.square .x:before, .square .x:after {
+    left: 45px;
+    top: 13px;
+    width: 10px;
+    height: 74px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.x:before, .x:after {
+    position: absolute;
+    content: "";
+    display: block;
+    background-color: black;
+    left: 90px;
+    top: 20px;
+    width: 20px;
+    height: 160px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.x:before {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.x:after {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.square .o {
+    border-width: 10px;
+}
+
+.o {
+    left: 16.666666667%;
+    top: 16.666666667%;
+    width: 66.666666667%;
+    height: 66.666666667%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 20px solid black;
+}
+
+.square .x, .square .o {
+    position: relative;
+    will-change: transform;
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+    -webkit-animation: appear .2s cubic-bezier(0.5,1.8,0.1,1.1);
+    -moz-animation: appear .2s cubic-bezier(0.5,1.8,0.1,1.1);
+    animation: appear .2s cubic-bezier(0.5,1.8,0.1,1.1);
+}

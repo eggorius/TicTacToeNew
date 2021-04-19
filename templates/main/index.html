@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TicTacToe</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/22c3bb69d6.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{% static 'css/tagify.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/index.css' %}">
+</head>
+<body>
+<h2 class="pb-2 pt-4 border-bottom pl-5">Tic Tac Toe</h2>
+<form style="margin: 100px" method="post" >
+  {% csrf_token %}
+  <input name='tags-jquery' value="type, some, tags" placeholder='write some tags' aria-label="Write some tags">
+  <button name="find" type="submit" class="btn btn-sm btn-outline-secondary mt-3">Find games</button>
+  <button id='tags-jquery--removeAllBtn' type="button" class="btn btn-sm btn-outline-secondary mt-3">Remove all tags</button>
+
+<div class="container">
+  <button id="create-game" class="btn btn-lg btn-outline-secondary ml-md-3 mb-3 mt-5">Create game</button>
+
+  <div class="container d-none" id="create-fields">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Game name</span>
+      </div>
+      {{ form.name }}
+{#      <input type="text" name="game-name" class="form-control" placeholder="Enter name" aria-label="Enter name" aria-describedby="basic-addon1">#}
+    </div>
+    <input type="text" name="tags-input" value="type, some, tags">
+    <button name="create" type="submit" class="btn btn-sm btn-outline-secondary mt-3 mb-3">Create</button>
+  </div>
+</div>
+</form>
+<div class="album py-5 bg-light">
+  <div class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    {% for game in games %}
+        <div class="col mt-md-5">
+          <div class="card shadow-sm">
+            <div class="card-footer">
+             {% for tag in game.tags.all %}
+               #{{ tag.title }};
+             {% endfor %}
+            </div>
+            <div class="card-body">
+              <p class="card-text">{{ game.name }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                      <a href="{% url 'join_game' name=game.name %}" style="text-decoration: none; color: black">Join</a>
+                    </button>
+                </div>
+                <small class="text-muted ml-2 mr-1">Created at: {{ game.created_at }}</small>
+                {% if game.current_players == 1 %}
+                  <small class="text" style="color: green">{{ game.current_players }}/2 players</small>
+                {% else%}
+                  <small class="text" style="color: darkred">{{ game.current_players }}/2 players</small>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+    {% endfor %}
+      </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="{% static 'tagify/dist/jQuery.tagify.min.js' %}"></script>
+<script>
+    let tagsJSON = JSON.parse('{{ tags|escapejs }}');
+    console.log(tagsJSON[0]['fields']['title']);
+    const tagsArray = Array(tagsJSON.length)
+    for (let i = 0; i < tagsJSON.length; i++) {
+        tagsArray[i] = tagsJSON[i]['fields']['title'];
+    }
+    const tags = [...new Set(tagsArray)]
+    console.log(tags)
+    var $input = $('input[name=tags-jquery]')
+    .tagify({
+        whitelist : tags,
+        maxItems: 20,
+        dropdown: {
+            maxItems: 20,           // <- mixumum allowed rendered suggestions
+            classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
+            enabled: 0,             // <- show suggestions on focus
+            closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+        }
+    })
+    .on('add', function(e, tagName){
+        console.log('JQEURY EVENT: ', 'added', tagName)
+    })
+    .on("invalid", function(e, tagName) {
+        console.log('JQEURY EVENT: ',"invalid", e, ' ', tagName);
+    });
+
+    // get the Tagify instance assigned for this jQuery input object so its methods could be accessed
+    const jqTagify = $input.data('tagify');
+
+    // bind the "click" event on the "remove all tags" button
+    $('#tags-jquery--removeAllBtn').on('click', jqTagify.removeAllTags.bind(jqTagify))
+
+    const createButton = document.getElementById('create-game')
+    createButton.addEventListener('click', ev => {
+        console.log("Clicked")
+        document.getElementById('create-fields').classList.toggle('d-none')
+    });
+
+    const $input1 = $('input[name=tags-input]').tagify()
+</script>
+</body>
+</html>
