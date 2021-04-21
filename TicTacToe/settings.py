@@ -70,13 +70,13 @@ ASGI_APPLICATION = 'TicTacToe.asgi.application'
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "BACKEND": "asgi_redis.RedisChannelLayer",
         "CONFIG": {
             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         },
+        "ROUTING": "chat.routing.channel_routing",
     },
 }
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
