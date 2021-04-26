@@ -1,32 +1,13 @@
 """Internal module for Python 2 backwards compatibility."""
 import errno
+import socket
 import sys
-
-try:
-    InterruptedError = InterruptedError
-except:
-    InterruptedError = OSError
 
 # For Python older than 3.5, retry EINTR.
 if sys.version_info[0] < 3 or (sys.version_info[0] == 3 and
                                sys.version_info[1] < 5):
     # Adapted from https://bugs.python.org/review/23863/patch/14532/54418
-    import socket
     import time
-    import errno
-
-    from select import select as _select
-
-    def select(rlist, wlist, xlist, timeout):
-        while True:
-            try:
-                return _select(rlist, wlist, xlist, timeout)
-            except InterruptedError as e:
-                # Python 2 does not define InterruptedError, instead
-                # try to catch an OSError with errno == EINTR == 4.
-                if getattr(e, 'errno', None) == getattr(errno, 'EINTR', 4):
-                    continue
-                raise
 
     # Wrapper for handling interruptable system calls.
     def _retryable_call(s, func, *args, **kwargs):
@@ -73,8 +54,6 @@ if sys.version_info[0] < 3 or (sys.version_info[0] == 3 and
         return _retryable_call(sock, sock.recv_into, *args, **kwargs)
 
 else:  # Python 3.5 and above automatically retry EINTR
-    from select import select
-
     def recv(sock, *args, **kwargs):
         return sock.recv(*args, **kwargs)
 
@@ -87,10 +66,6 @@ if sys.version_info[0] < 3:
     from itertools import imap, izip
     from string import letters as ascii_letters
     from Queue import Queue
-    try:
-        from cStringIO import StringIO as BytesIO
-    except ImportError:
-        from StringIO import StringIO as BytesIO
 
     # special unicode handling for python2 to avoid UnicodeDecodeError
     def safe_unicode(obj, *args):
@@ -114,12 +89,6 @@ if sys.version_info[0] < 3:
     def nativestr(x):
         return x if isinstance(x, str) else x.encode('utf-8', 'replace')
 
-    def u(x):
-        return x.decode()
-
-    def b(x):
-        return x
-
     def next(x):
         return x.next()
 
@@ -130,11 +99,10 @@ if sys.version_info[0] < 3:
     xrange = xrange
     basestring = basestring
     unicode = unicode
-    bytes = str
     long = long
+    BlockingIOError = socket.error
 else:
     from urllib.parse import parse_qs, unquote, urlparse
-    from io import BytesIO
     from string import ascii_letters
     from queue import Queue
 
@@ -153,12 +121,6 @@ else:
     def nativestr(x):
         return x if isinstance(x, str) else x.decode('utf-8', 'replace')
 
-    def u(x):
-        return x
-
-    def b(x):
-        return x.encode('latin-1') if not isinstance(x, bytes) else x
-
     next = next
     unichr = chr
     imap = map
@@ -167,32 +129,10 @@ else:
     basestring = str
     unicode = str
     safe_unicode = str
-    bytes = bytes
     long = int
+    BlockingIOError = BlockingIOError
 
 try:  # Python 3
     from queue import LifoQueue, Empty, Full
-except ImportError:
-    from Queue import Empty, Full
-    try:  # Python 2.6 - 2.7
-        from Queue import LifoQueue
-    except ImportError:  # Python 2.5
-        from Queue import Queue
-        # From the Python 2.7 lib. Python 2.5 already extracted the core
-        # methods to aid implementating different queue organisations.
-
-        class LifoQueue(Queue):
-            "Override queue methods to implement a last-in first-out queue."
-
-            def _init(self, maxsize):
-                self.maxsize = maxsize
-                self.queue = []
-
-            def _qsize(self, len=len):
-                return len(self.queue)
-
-            def _put(self, item):
-                self.queue.append(item)
-
-            def _get(self):
-                return self.queue.pop()
+except ImportError:  # Python 2
+    from Queue import LifoQueue, Empty, Full
